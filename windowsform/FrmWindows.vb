@@ -98,27 +98,22 @@ Public Class FrmWindows
 
     Private Sub Consultar_Click(sender As Object, e As EventArgs) Handles Consultar.Click
         Try
-            conexao = New MySqlConnection("Server=localhost;Database=cliente;Uid=root;Pwd=123;")
+            Dim id As Integer = CInt(boxIdd.Text)
 
-            strSQL = "SELECT * FROM CAD_CLIENTE WHERE ID = @ID"
+            Dim model As New Model
 
-            comando = New MySqlCommand(strSQL, conexao)
+            Dim cliente As Cliente = model.getCliente(id)
 
-            comando.Parameters.AddWithValue("@ID", boxIdd.Text)
+            If cliente Is Nothing Then
+                MessageBox.Show("Não existe cliente com esse id", "Erro", MessageBoxButtons.OK)
+                boxIdd.Text = ""
+            Else
+                boxNome.Text = cliente.Nome
+                boxNumero.Text = cliente.Numero
+            End If
 
-            conexao.Open()
-            dr = comando.ExecuteReader()
-
-            Do While dr.Read
-                boxNome.Text = dr("nome")
-                boxNumero.Text = dr("numero")
-            Loop
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
-        Finally
-            conexao.Close()
-            conexao = Nothing
-            conexao = Nothing
+            MessageBox.Show(ex.Message, "Erro")
         End Try
     End Sub
 

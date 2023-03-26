@@ -102,4 +102,29 @@ Public Class Banco
         dr.Close()
         conexao.Close()
     End Sub
+
+    Public Function getCliente(id) As Cliente
+        conexao = New MySqlConnection("Server=localhost;Database=cliente;Uid=root;Pwd=123;")
+        strSQL = "SELECT * FROM CAD_CLIENTE WHERE ID = @ID"
+
+        comando = New MySqlCommand(strSQL, conexao)
+
+        comando.Parameters.AddWithValue("@ID", id)
+
+        conexao.Open()
+        dr = comando.ExecuteReader()
+
+        Dim cliente As New Cliente
+
+        Do While dr.Read
+            cliente.Nome = dr("nome")
+            cliente.Numero = dr("numero")
+        Loop
+
+        If Not dr.HasRows Then
+            Return Nothing
+        End If
+
+        Return cliente
+    End Function
 End Class

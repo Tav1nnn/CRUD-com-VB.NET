@@ -53,4 +53,11 @@
             Return False
         End If
     End Function
+
+    Public Function getCliente(id As Integer) As Cliente
+        Dim banco As New Banco
+
+        Return banco.getCliente(id)
+
+    End Function
 End Class
