@@ -7,28 +7,26 @@ Public Class FrmWindows
     Private strSQL As String
 
     Private Sub btnNovo_Click(sender As Object, e As EventArgs) Handles btnNovo.Click
-        Try
-            conexao = New MySqlConnection("Server=localhost;Database=cliente;Uid=root;Pwd=123;")
 
-            strSQL = "INSERT INTO CAD_CLIENTE (NOME, NUMERO) VALUES (@NOME, @NUMERO)"
+        Dim nome As String = CStr(boxNome.Text)
+        Dim numero As Integer = CInt(boxNumero.Text)
 
-            comando = New MySqlCommand(strSQL, conexao)
+        Dim cliente As New Cliente
+        cliente.Nome = nome
+        cliente.Numero = numero
 
-            comando.Parameters.AddWithValue("@NOME", boxNome.Text)
-            comando.Parameters.AddWithValue("@NUMERO", boxNumero.Text)
+        Dim model As New Model
 
-            conexao.Open()
-            comando.ExecuteNonQuery()
-            MessageBox.Show("Usuário Cadastrado", "Sucesso", MessageBoxButtons.OK)
-        Catch ex As Exception
-            MessageBox.Show(ex.Message)
-        Finally
+        Dim add As Boolean = model.add(cliente)
 
-            conexao.Close()
-            conexao = Nothing
-            conexao = Nothing
-        End Try
+        If add = True Then
+            MessageBox.Show("Cliente Cadastrado", "Sucesso", MessageBoxButtons.OK)
+            boxNome.Text = ""
+            boxNumero.Text = ""
 
+        Else
+            MessageBox.Show("Esse Numero já existe", "Erro", MessageBoxButtons.OK)
+        End If
     End Sub
 
     Private Sub btnEditar_Click(sender As Object, e As EventArgs) Handles btnEditar.Click
