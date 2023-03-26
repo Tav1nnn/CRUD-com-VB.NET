@@ -73,24 +73,26 @@ Public Class FrmWindows
 
     Private Sub btnExcluir_Click(sender As Object, e As EventArgs) Handles btnExcluir.Click
         Try
-            conexao = New MySqlConnection("Server=localhost;Database=cliente;Uid=root;Pwd=123;")
+            Dim id As Integer = CInt(boxIdd.Text)
 
-            strSQL = "DELETE FROM CAD_CLIENTE WHERE ID = @ID"
+            Dim cliente As New Cliente
+            cliente.Id = id
 
-            comando = New MySqlCommand(strSQL, conexao)
+            Dim model As New Model
 
-            comando.Parameters.AddWithValue("@ID", boxIdd.Text)
+            Dim deletar As Boolean = model.deletar(cliente)
 
-            conexao.Open()
-            comando.ExecuteNonQuery()
-            MessageBox.Show("Usuário Deletado", "Sucesso", MessageBoxButtons.OK)
+            If deletar = True Then
+                MessageBox.Show("Usuario Deletado", "Sucesso", MessageBoxButtons.OK)
+                boxNome.Text = ""
+                boxNumero.Text = ""
 
+            Else
+                MessageBox.Show("Este Id não existe", "Erro", MessageBoxButtons.OK)
+                boxIdd.Text = ""
+            End If
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
-        Finally
-            conexao.Close()
-            conexao = Nothing
-            conexao = Nothing
+            MessageBox.Show(ex.Message, "Erro")
         End Try
     End Sub
 

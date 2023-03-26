@@ -14,7 +14,7 @@
 
     End Function
 
-    Friend Function verificarId(cliente As Cliente) As Boolean
+    Public Function verificarId(cliente As Cliente) As Boolean
         Dim banco As New Banco
 
         Dim idExiste As Boolean = banco.verificarId(cliente)
@@ -28,7 +28,7 @@
 
     End Function
 
-    Friend Function editar(cliente As Cliente) As Boolean
+    Public Function editar(cliente As Cliente) As Boolean
         Dim banco As New Banco
 
         Dim verificarNumero As Boolean = banco.verificarNumero(cliente)
@@ -38,6 +38,19 @@
         Else
             banco.editar(cliente)
             Return True
+        End If
+    End Function
+
+    Public Function deletar(cliente As Cliente) As Boolean
+        Dim banco As New Banco
+
+        Dim verificarId As Boolean = banco.verificarId(cliente)
+
+        If verificarId = True Then
+            banco.deletar(cliente)
+            Return True
+        Else
+            Return False
         End If
     End Function
 End Class

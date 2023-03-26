@@ -49,7 +49,7 @@ Public Class Banco
 
     End Sub
 
-    Friend Function verificarId(cliente As Cliente) As Boolean
+    Public Function verificarId(cliente As Cliente) As Boolean
         conexao = New MySqlConnection("Server=localhost;Database=cliente;Uid=root;Pwd=123;")
         strSQL = "SELECT * FROM CAD_CLIENTE WHERE ID = @ID"
 
@@ -72,7 +72,7 @@ Public Class Banco
         End If
     End Function
 
-    Friend Sub editar(cliente As Cliente)
+    Public Sub editar(cliente As Cliente)
         conexao = New MySqlConnection("Server=localhost;Database=cliente;Uid=root;Pwd=123;")
         strSQL = "UPDATE CAD_CLIENTE SET NOME = @NOME, NUMERO = @NUMERO WHERE ID = @ID"
 
@@ -81,6 +81,20 @@ Public Class Banco
         comando.Parameters.AddWithValue("@ID", cliente.Id)
         comando.Parameters.AddWithValue("@NOME", cliente.Nome)
         comando.Parameters.AddWithValue("@NUMERO", cliente.Numero)
+
+        conexao.Open()
+        dr = comando.ExecuteReader()
+
+        dr.Close()
+        conexao.Close()
+    End Sub
+
+    Public Sub deletar(cliente As Cliente)
+        conexao = New MySqlConnection("Server=localhost;Database=cliente;Uid=root;Pwd=123;")
+        strSQL = "DELETE FROM CAD_CLIENTE WHERE ID = @ID"
+
+        comando = New MySqlCommand(strSQL, conexao)
+        comando.Parameters.AddWithValue("@ID", cliente.Id)
 
         conexao.Open()
         dr = comando.ExecuteReader()
