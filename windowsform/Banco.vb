@@ -48,4 +48,44 @@ Public Class Banco
         conexao.Close()
 
     End Sub
+
+    Friend Function verificarId(cliente As Cliente) As Boolean
+        conexao = New MySqlConnection("Server=localhost;Database=cliente;Uid=root;Pwd=123;")
+        strSQL = "SELECT * FROM CAD_CLIENTE WHERE ID = @ID"
+
+        comando = New MySqlCommand(strSQL, conexao)
+
+        comando.Parameters.AddWithValue("@ID", cliente.Id)
+
+        conexao.Open()
+        dr = comando.ExecuteReader()
+
+        If dr.HasRows Then
+            dr.Close()
+            conexao.Close()
+            Return True
+
+        Else
+            dr.Close()
+            conexao.Close()
+            Return False
+        End If
+    End Function
+
+    Friend Sub editar(cliente As Cliente)
+        conexao = New MySqlConnection("Server=localhost;Database=cliente;Uid=root;Pwd=123;")
+        strSQL = "UPDATE CAD_CLIENTE SET NOME = @NOME, NUMERO = @NUMERO WHERE ID = @ID"
+
+        comando = New MySqlCommand(strSQL, conexao)
+
+        comando.Parameters.AddWithValue("@ID", cliente.Id)
+        comando.Parameters.AddWithValue("@NOME", cliente.Nome)
+        comando.Parameters.AddWithValue("@NUMERO", cliente.Numero)
+
+        conexao.Open()
+        dr = comando.ExecuteReader()
+
+        dr.Close()
+        conexao.Close()
+    End Sub
 End Class

@@ -7,51 +7,68 @@ Public Class FrmWindows
     Private strSQL As String
 
     Private Sub btnNovo_Click(sender As Object, e As EventArgs) Handles btnNovo.Click
+        Try
+            Dim nome As String = CStr(boxNome.Text)
+            Dim numero As Integer = CInt(boxNumero.Text)
 
-        Dim nome As String = CStr(boxNome.Text)
-        Dim numero As Integer = CInt(boxNumero.Text)
+            Dim cliente As New Cliente
+            cliente.Nome = nome
+            cliente.Numero = numero
 
-        Dim cliente As New Cliente
-        cliente.Nome = nome
-        cliente.Numero = numero
+            Dim model As New Model
 
-        Dim model As New Model
+            Dim add As Boolean = model.add(cliente)
 
-        Dim add As Boolean = model.add(cliente)
+            If add = True Then
+                MessageBox.Show("Cliente Cadastrado", "Sucesso", MessageBoxButtons.OK)
+                boxNome.Text = ""
+                boxNumero.Text = ""
 
-        If add = True Then
-            MessageBox.Show("Cliente Cadastrado", "Sucesso", MessageBoxButtons.OK)
-            boxNome.Text = ""
-            boxNumero.Text = ""
+            Else
+                MessageBox.Show("Esse Numero já existe", "Erro", MessageBoxButtons.OK)
+                boxNumero.Text = ""
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Erro")
+        End Try
 
-        Else
-            MessageBox.Show("Esse Numero já existe", "Erro", MessageBoxButtons.OK)
-        End If
     End Sub
 
     Private Sub btnEditar_Click(sender As Object, e As EventArgs) Handles btnEditar.Click
         Try
-            conexao = New MySqlConnection("Server=localhost;Database=cliente;Uid=root;Pwd=123;")
+            Dim id As Integer = CInt(boxIdd.Text)
+            Dim nome As String = CStr(boxNome.Text)
+            Dim numero As Integer = CInt(boxNumero.Text)
 
-            strSQL = "UPDATE CAD_CLIENTE SET NOME = @NOME, NUMERO = @NUMERO WHERE ID = @ID"
+            Dim cliente As New Cliente
+            cliente.Id = id
+            cliente.Nome = nome
+            cliente.Numero = numero
 
-            comando = New MySqlCommand(strSQL, conexao)
+            Dim model As New Model
+            Dim verificarId As Boolean = model.verificarId(cliente)
 
-            comando.Parameters.AddWithValue("@ID", boxIdd.Text)
-            comando.Parameters.AddWithValue("@NOME", boxNome.Text)
-            comando.Parameters.AddWithValue("@NUMERO", boxNumero.Text)
+            If verificarId = True Then
+                Dim editar As Boolean = model.editar(cliente)
 
-            conexao.Open()
-            comando.ExecuteNonQuery()
-            MessageBox.Show("Usuário Editado", "Sucesso", MessageBoxButtons.OK)
+                If editar = True Then
+                    MessageBox.Show("Cliente Editado", "Sucesso", MessageBoxButtons.OK)
+                    boxIdd.Text = ""
+                    boxNome.Text = ""
+                    boxNumero.Text = ""
+                Else
+                    MessageBox.Show("Esse Numero já existe", "Erro", MessageBoxButtons.OK)
+                End If
+            Else
+                MessageBox.Show("Não existe cliente com este id", "Erro", MessageBoxButtons.OK)
+                boxNumero.Text = ""
+            End If
 
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
-        Finally
-            conexao.Close()
-            conexao = Nothing
-            conexao = Nothing
+            MessageBox.Show(ex.Message, "Erro")
         End Try
+
+
     End Sub
 
     Private Sub btnExcluir_Click(sender As Object, e As EventArgs) Handles btnExcluir.Click
