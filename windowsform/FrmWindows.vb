@@ -1,11 +1,5 @@
 ﻿Imports MySql.Data.MySqlClient
 Public Class FrmWindows
-    Private conexao As MySqlConnection
-    Private comando As MySqlCommand
-    Private da As MySqlDataAdapter
-    Private dr As MySqlDataReader
-    Private strSQL As String
-
     Private Sub btnNovo_Click(sender As Object, e As EventArgs) Handles btnNovo.Click
         Try
             Dim nome As String = CStr(boxNome.Text)
@@ -119,24 +113,15 @@ Public Class FrmWindows
 
     Private Sub Exibir_Click(sender As Object, e As EventArgs) Handles Exibir.Click
         Try
-            conexao = New MySqlConnection("Server=localhost;Database=cliente;Uid=root;Pwd=123;")
+            Dim model As New Model
 
-            strSQL = "SELECT * FROM CAD_CLIENTE"
+            Dim lista As ArrayList = model.exibir()
 
-            Dim dt As New DataTable
-
-            da = New MySqlDataAdapter(strSQL, conexao)
-
-            da.Fill(dt)
-
-            grid.DataSource = dt
+            grid.DataSource = lista
 
         Catch ex As Exception
             MessageBox.Show(ex.Message)
-        Finally
-            conexao.Close()
-            conexao = Nothing
-            conexao = Nothing
+
         End Try
     End Sub
 End Class

@@ -51,7 +51,7 @@ Public Class Banco
 
     Public Function verificarId(cliente As Cliente) As Boolean
         conexao = New MySqlConnection("Server=localhost;Database=cliente;Uid=root;Pwd=123;")
-        strSQL = "SELECT * FROM CAD_CLIENTE WHERE ID = @ID"
+        strSQL = "SELECT ID FROM CAD_CLIENTE WHERE ID = @ID"
 
         comando = New MySqlCommand(strSQL, conexao)
 
@@ -105,7 +105,7 @@ Public Class Banco
 
     Public Function getCliente(id) As Cliente
         conexao = New MySqlConnection("Server=localhost;Database=cliente;Uid=root;Pwd=123;")
-        strSQL = "SELECT * FROM CAD_CLIENTE WHERE ID = @ID"
+        strSQL = "SELECT ID, NOME, NUMERO FROM CAD_CLIENTE WHERE ID = @ID"
 
         comando = New MySqlCommand(strSQL, conexao)
 
@@ -126,5 +126,30 @@ Public Class Banco
         End If
 
         Return cliente
+    End Function
+
+    Public Function exibir() As ArrayList
+        Dim lista As New ArrayList
+
+        conexao = New MySqlConnection("Server=localhost;Database=cliente;Uid=root;Pwd=123;")
+        strSQL = "SELECT ID, NOME, NUMERO FROM CAD_CLIENTE"
+
+        comando = New MySqlCommand(strSQL, conexao)
+
+        conexao.Open()
+        dr = comando.ExecuteReader()
+
+        While dr.Read
+            Dim cliente As New Cliente
+            cliente.Id = dr("id")
+            cliente.Nome = dr("nome")
+            cliente.Numero = dr("numero")
+            lista.Add(cliente)
+        End While
+
+        conexao.Close()
+        conexao = Nothing
+
+        Return lista
     End Function
 End Class

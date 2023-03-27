@@ -60,4 +60,10 @@
         Return banco.getCliente(id)
 
     End Function
+
+    Public Function exibir() As ArrayList
+        Dim banco As New Banco
+
+        Return banco.exibir()
+    End Function
 End Class
